@@ -25,6 +25,9 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany
+    @JoinColumn(name = "ticked_id")
+    private Ticket tIcket;
 
     public User(String name, String surname, String email, String password) {
         this.name = name;

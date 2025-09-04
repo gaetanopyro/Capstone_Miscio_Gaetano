@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 
-public class TIcket {
+public class Ticket {
     @Id
     @GeneratedValue
     private UUID id;
@@ -29,12 +29,17 @@ public class TIcket {
     @Enumerated(EnumType.STRING)
     private Priority priority;
     private LocalDateTime date;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public TIcket(String title, String description, Status status, Priority priority, LocalDateTime date) {
+    public Ticket(String title, String description, Status status, Priority priority, LocalDateTime date, User user) {
         this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
         this.date = date;
+        this.user = user;
     }
+
 }
