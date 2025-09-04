@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,15 +27,14 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany
-    @JoinColumn(name = "ticked_id")
-    private Ticket tIcket;
+    @OneToMany(mappedBy = "user")
+    private List<Ticket> tickets = new ArrayList<>();
 
     public User(String name, String surname, String email, String password) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
-        this.role = role.USER;
+        this.role = Role.USER;
     }
 }
