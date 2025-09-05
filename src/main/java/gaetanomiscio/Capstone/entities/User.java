@@ -23,6 +23,7 @@ public class User {
     private UUID id;
     private String name;
     private String surname;
+    private String username;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -30,9 +31,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Ticket> tickets = new ArrayList<>();
 
-    public User(String name, String surname, String email, String password) {
+    public User(String name, String surname, String username, String email, String password) {
         this.name = name;
         this.surname = surname;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.role = Role.USER;
