@@ -1,4 +1,4 @@
-package gaetanomiscio.Capstone.exceprions;
+package gaetanomiscio.Capstone.exceptions;
 
 public class BadRequestException extends RuntimeException {
     public BadRequestException(String msg) {

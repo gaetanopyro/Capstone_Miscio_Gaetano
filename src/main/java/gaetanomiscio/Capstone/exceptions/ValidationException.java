@@ -1,7 +1,10 @@
-package gaetanomiscio.Capstone.exceprions;
+package gaetanomiscio.Capstone.exceptions;
+
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class ValidationException extends RuntimeException {
     private List<String> errorMessages;
 
