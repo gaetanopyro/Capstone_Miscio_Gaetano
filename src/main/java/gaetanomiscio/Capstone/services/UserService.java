@@ -4,8 +4,7 @@ import gaetanomiscio.Capstone.entities.User;
 import gaetanomiscio.Capstone.enums.Role;
 import gaetanomiscio.Capstone.exceptions.NotFoundException;
 import gaetanomiscio.Capstone.payload.UserDTO;
-import gaetanomiscio.Capstone.payload.UserRespDTO;
-import gaetanomiscio.Capstone.repositories.UsersRepository;
+import gaetanomiscio.Capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +14,11 @@ import java.util.UUID;
 @Service
 public class UserService {
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
     //private final PasswordEncoder passwordEncoder;
 
     public User createUser(UserDTO payload) {
-        if (usersRepository.existsByEmail(payload.email())) {
+        if (userRepository.existsByEmail(payload.email())) {
             throw new IllegalArgumentException("Email già registrata");
         }
         User u = new User();
@@ -28,29 +27,25 @@ public class UserService {
         // u.setPassword(passwordEncoder.encode(payload.password()));
         u.setRole(Role.USER);
 
-        return usersRepository.save(u);
+        return userRepository.save(u);
     }
 
     public User findById(UUID id) {
-        return usersRepository.findById(id).orElseThrow(() -> new NotFoundException("User con id: " + id + "non trovato."));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User con id: " + id + "non trovato."));
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
     }
 
     public List<User> findAllUsers() {
-        return usersRepository.findAll();
+        return userRepository.findAll();
     }
 
-    public UserRespDTO updateUser(UUID id, UserDTO payload) {
-        User u = usersRepository.findById(id).orElseThrow(() -> new NotFoundException("User con id: " + id + "non trovato."));
-        u.setUsername(payload.username());
-        u.setEmail(payload.email());
-        //u.setPassword(passwordEncoder.encode(dto.password()));
-        User saved = usersRepository.save(u);
-        return new UserRespDTO(saved.getId());
+    public User updateRole(UUID userId, Role newRole) {
+        User found = this.findById(userId);
+        found.setRole(newRole);
+        return userRepository.save(found);
     }
 
-
-    public void deleteUser(UUID id) {
-        if (!usersRepository.existsById(id)) throw new NotFoundException(id);
-        usersRepository.deleteById(id);
-    }
 }

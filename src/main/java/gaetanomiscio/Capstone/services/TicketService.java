@@ -7,7 +7,7 @@ import gaetanomiscio.Capstone.exceptions.NotFoundException;
 import gaetanomiscio.Capstone.payload.CreateTicketDTO;
 import gaetanomiscio.Capstone.payload.UpdateTicketDTO;
 import gaetanomiscio.Capstone.repositories.TicketRepository;
-import gaetanomiscio.Capstone.repositories.UsersRepository;
+import gaetanomiscio.Capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +20,11 @@ public class TicketService {
     @Autowired
     private TicketRepository ticketRepository;
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
 
     public Ticket create(CreateTicketDTO nT, UUID userId) {
-        User user = usersRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
         Ticket ticket = new Ticket(
                 nT.title(),
                 nT.description(),
