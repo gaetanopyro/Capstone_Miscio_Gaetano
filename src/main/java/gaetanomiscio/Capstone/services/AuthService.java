@@ -7,16 +7,23 @@ import gaetanomiscio.Capstone.payload.LoginDTO;
 import gaetanomiscio.Capstone.payload.UserDTO;
 import gaetanomiscio.Capstone.payload.UserRespDTO;
 import gaetanomiscio.Capstone.repositories.UserRepository;
+import gaetanomiscio.Capstone.tools.JWTTools;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthService {
     @Autowired
     private UserRepository userRepository;
-    //   private PasswordEncoder passwordEncoder;
-    //   private JWTTools jwtTools;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JWTTools jwtTools;
 
     public String authenticateUser(LoginDTO body) {
-        User user = userRepository.findByEmail(body.email());
+        User user = userRepository.findByEmail(body.email())
+                .orElseThrow(() -> new UnauthorizedException("Credenziali non valide!"));
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
             return jwtTools.createToken(user);
         } else {
@@ -24,10 +31,10 @@ public class AuthService {
         }
     }
 
-    public UserRespDTO register(UserDTO body) {
-        userRepository.existsByEmail(body.email()).ifPresent(user -> {
-            throw new BadRequestException("L'email " + body.getEmail() + " è già in uso!");
-        });
+    public UserRespDTO registerUser(UserDTO body) {
+        if (userRepository.existsByEmail(body.email())) {
+            throw new BadRequestException("L'email " + body.email() + " è già in uso!");
+        }
         User newUser = new User();
         newUser.setUsername(body.username());
         newUser.setEmail(body.email());

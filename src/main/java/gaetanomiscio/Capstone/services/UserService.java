@@ -6,6 +6,7 @@ import gaetanomiscio.Capstone.exceptions.NotFoundException;
 import gaetanomiscio.Capstone.payload.UserDTO;
 import gaetanomiscio.Capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,8 @@ import java.util.UUID;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    //private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User createUser(UserDTO payload) {
         if (userRepository.existsByEmail(payload.email())) {
@@ -24,7 +26,7 @@ public class UserService {
         User u = new User();
         u.setUsername(payload.username());
         u.setEmail(payload.email());
-        // u.setPassword(passwordEncoder.encode(payload.password()));
+        u.setPassword(passwordEncoder.encode(payload.password()));
         u.setRole(Role.USER);
 
         return userRepository.save(u);
