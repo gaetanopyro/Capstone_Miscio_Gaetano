@@ -32,7 +32,7 @@ public class JWTFilter extends OncePerRequestFilter {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new UnauthorizedException("Per favore passa il token nell'header 'Autorizzazione'");
         }
-        String accessToken = authHeader.replace("Bearer ", "");
+        String accessToken = authHeader.substring(7);
 
         jwtTools.verifyToken(accessToken);
 

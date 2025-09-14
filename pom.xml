@@ -115,6 +115,11 @@
             <artifactId>unirest-java-core</artifactId>
             <version>4.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.13.11</version>
+        </dependency>
     </dependencies>
 
     <build>

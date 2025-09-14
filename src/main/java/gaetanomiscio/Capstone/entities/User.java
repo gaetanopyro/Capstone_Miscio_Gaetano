@@ -27,7 +27,6 @@ public class User implements UserDetails {
     @GeneratedValue
     private UUID id;
     private String name;
-    private String surname;
     private String username;
     private String email;
     private String password;
@@ -36,13 +35,13 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Ticket> tickets = new ArrayList<>();
 
-    public User(String name, String surname, String username, String email, String password) {
+    public User(String name, String username, String email, String password) {
         this.name = name;
-        this.surname = surname;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = Role.USER;
+
     }
 
     @Override

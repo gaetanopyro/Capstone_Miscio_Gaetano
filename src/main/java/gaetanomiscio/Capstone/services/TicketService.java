@@ -2,6 +2,7 @@ package gaetanomiscio.Capstone.services;
 
 import gaetanomiscio.Capstone.entities.Ticket;
 import gaetanomiscio.Capstone.entities.User;
+import gaetanomiscio.Capstone.enums.Role;
 import gaetanomiscio.Capstone.enums.Status;
 import gaetanomiscio.Capstone.exceptions.NotFoundException;
 import gaetanomiscio.Capstone.exceptions.UnauthorizedException;
@@ -48,37 +49,31 @@ public class TicketService {
 
     public Ticket findByIdAndUpdate(UUID id, UpdateTicketDTO payload, User currentUser) {
         Ticket found = this.ticketRepository.findById(id).orElseThrow(() -> new NotFoundException("Ticket con id: " + id + "non trovato."));
-        if (currentUser.getRole().name().equals("ADMIN")) {
-        } else if (currentUser.getRole().name().equals("USER")) {
-            if (!found.getUser().getId().equals(currentUser.getId())) {
-                throw new UnauthorizedException("Non hai i permessi per modificare questo ticket!");
+        if (currentUser.getRole() == Role.ADMIN || isTicketOwner(id, currentUser)) {
+            if (payload.description() != null) {
+                found.setDescription(payload.description());
             }
+            if (payload.status() != null) {
+                found.setStatus(payload.status());
+            }
+            found.setDate(LocalDateTime.now());
+            return this.ticketRepository.save(found);
         } else {
-            throw new UnauthorizedException("Ruolo non autorizzato a modificare ticket!");
+            throw new UnauthorizedException("Non sei autorizzato a modificare questo ticket.");
         }
-        if (payload.description() != null) {
-            found.setDescription(payload.description());
-        }
-        if (payload.status() != null) {
-            found.setStatus(payload.status());
-        }
-        found.setDate(LocalDateTime.now());
-        return this.ticketRepository.save(found);
     }
 
     public void deleteTicket(UUID id, User currentUser) {
-        Ticket found = this.ticketRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Ticket con id: " + id + " non trovato."));
-        if (currentUser.getRole().name().equals("ADMIN")) {
-            this.ticketRepository.delete(found);
-            return;
-        } else if (currentUser.getRole().name().equals("USER")) {
-            if (!found.getUser().getId().equals(currentUser.getId())) {
-                throw new UnauthorizedException("Non hai i permessi per eliminare questo ticket!");
-            }
+        Ticket found = this.ticketRepository.findById(id).orElseThrow(() -> new NotFoundException("Ticket con id: " + id + " non trovato."));
+        if (currentUser.getRole() == Role.ADMIN || isTicketOwner(id, currentUser)) {
             this.ticketRepository.delete(found);
         } else {
-            throw new UnauthorizedException("Ruolo non autorizzato a eliminare ticket!");
+            throw new UnauthorizedException("Non sei autorizzato a eliminare questo ticket.");
         }
+    }
+
+    public boolean isTicketOwner(UUID ticketId, User currentUser) {
+        Ticket ticket = findById(ticketId);
+        return ticket.getUser().getId().equals(currentUser.getId());
     }
 }

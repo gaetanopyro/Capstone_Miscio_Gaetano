@@ -1,4 +1,4 @@
 package gaetanomiscio.Capstone.payload;
 
-public record LoginDTO(String email, String password) {
+public record LoginDTO(String username, String email, String password) {
 }

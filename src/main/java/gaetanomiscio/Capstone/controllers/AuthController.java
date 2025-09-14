@@ -37,4 +37,6 @@ public class AuthController {
         }
         return authService.registerUser(newUser);
     }
+
+
 }
