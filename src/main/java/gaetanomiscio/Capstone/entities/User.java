@@ -26,7 +26,6 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private UUID id;
-    private String name;
     private String username;
     private String email;
     private String password;
@@ -35,8 +34,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Ticket> tickets = new ArrayList<>();
 
-    public User(String name, String username, String email, String password) {
-        this.name = name;
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -46,7 +44,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
     }
 
     @Override

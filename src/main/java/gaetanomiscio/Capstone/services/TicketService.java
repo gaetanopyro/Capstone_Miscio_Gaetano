@@ -47,6 +47,10 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
+    public List<Ticket> findByUserId(UUID userId) {
+        return ticketRepository.findByUserId(userId);
+    }
+
     public Ticket findByIdAndUpdate(UUID id, UpdateTicketDTO payload, User currentUser) {
         Ticket found = this.ticketRepository.findById(id).orElseThrow(() -> new NotFoundException("Ticket con id: " + id + "non trovato."));
         if (currentUser.getRole() == Role.ADMIN || isTicketOwner(id, currentUser)) {

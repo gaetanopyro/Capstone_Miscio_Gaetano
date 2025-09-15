@@ -40,15 +40,16 @@ public class JWTFilter extends OncePerRequestFilter {
         User currentUser = userService.findById(UUID.fromString(UserId));
         Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("Authorities dell'utente: " + currentUser.getAuthorities());
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        return antPathMatcher.match("/auth/**", request.getServletPath()) ||
+        return antPathMatcher.match("/auth/**", request.getServletPath());/* ||
                 antPathMatcher.match("/tickets", request.getServletPath()) && request.getMethod().equals("GET") ||
-                antPathMatcher.match("/tickets/**", request.getServletPath()) && request.getMethod().equals("GET");
+                antPathMatcher.match("/tickets/**", request.getServletPath()) && request.getMethod().equals("GET");*/
     }
 
 }

@@ -21,10 +21,10 @@ public class SecurityConfig {
         httpSecurity.csrf(http -> http.disable());
         httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/auth/**").permitAll());
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/tickets").permitAll());
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/tickets/**").permitAll());
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").authenticated());
+        //httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/auth/**").permitAll());
+        //httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/tickets").permitAll());
+        //httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/tickets/**").permitAll());
+        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").permitAll());
 
         httpSecurity.cors(Customizer.withDefaults());
         return httpSecurity.build();

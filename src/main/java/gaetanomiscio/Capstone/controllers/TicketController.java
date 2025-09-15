@@ -24,27 +24,33 @@ public class TicketController {
     //controllare la post
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Ticket createTicket(@RequestBody CreateTicketDTO payload,
                                //@RequestParam UUID userId,
                                @AuthenticationPrincipal User currentUser) {
         return ticketService.create(payload, currentUser.getId());
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Ticket getTicketById(@PathVariable UUID id) {
-        return ticketService.findById(id);
-    }
-
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Ticket> getAllTickets() {
         return ticketService.findAllTickets();
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public Ticket getTicketById(@PathVariable UUID id) {
+        return ticketService.findById(id);
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public List<Ticket> getAllTickets(@AuthenticationPrincipal User currentUser) {
+        return ticketService.findByUserId(currentUser.getId());
+    }
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or @ticketService.isTicketOwner(#id, #currentUser)")
+    @PreAuthorize("hasRole('ADMIN') or @ticketService.isTicketOwner(#id, #currentUser)")
     public Ticket updateTicket(@PathVariable UUID id,
                                @RequestBody UpdateTicketDTO payload,
                                @AuthenticationPrincipal User currentUser) {
@@ -52,7 +58,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or @ticketService.isTicketOwner(#id, #currentUser)")
+    @PreAuthorize("hasRole('ADMIN') or @ticketService.isTicketOwner(#id, #currentUser)")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTicket(@PathVariable UUID id, @AuthenticationPrincipal User currentUser) {
         ticketService.deleteTicket(id, currentUser);

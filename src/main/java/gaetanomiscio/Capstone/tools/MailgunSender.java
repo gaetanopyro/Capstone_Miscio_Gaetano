@@ -26,7 +26,7 @@ public class MailgunSender {
                 .queryString("from", "tanomiscio@gmail.com")
                 .queryString("to", recipient.getEmail()) // Qua dobbiamo metterci un indirizzo email autorizzato a ricevere
                 .queryString("subject", "Registrazione completata!")
-                .queryString("text", "Benvenuto " + recipient.getName() + " sulla nostra piattaforma!")
+                .queryString("text", "Benvenuto " + recipient.getUsername() + " sulla nostra piattaforma!")
                 .asJson();
         System.out.println(response.getBody());
     }

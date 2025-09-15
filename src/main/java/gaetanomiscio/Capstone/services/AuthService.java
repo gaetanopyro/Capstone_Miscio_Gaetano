@@ -1,6 +1,7 @@
 package gaetanomiscio.Capstone.services;
 
 import gaetanomiscio.Capstone.entities.User;
+import gaetanomiscio.Capstone.enums.Role;
 import gaetanomiscio.Capstone.exceptions.BadRequestException;
 import gaetanomiscio.Capstone.exceptions.NotFoundException;
 import gaetanomiscio.Capstone.exceptions.UnauthorizedException;
@@ -43,6 +44,7 @@ public class AuthService {
         newUser.setUsername(body.username());
         newUser.setEmail(body.email());
         newUser.setPassword(passwordEncoder.encode(body.password()));
+        newUser.setRole(Role.USER);
         User savedUser = userRepository.save(newUser);
         mailgunSender.sendRegistrationEmail(savedUser);
         return new UserRespDTO(savedUser.getId());
