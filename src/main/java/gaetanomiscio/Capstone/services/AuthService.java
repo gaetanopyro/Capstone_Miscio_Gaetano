@@ -44,7 +44,7 @@ public class AuthService {
         newUser.setUsername(body.username());
         newUser.setEmail(body.email());
         newUser.setPassword(passwordEncoder.encode(body.password()));
-        newUser.setRole(Role.USER);
+        newUser.setRole(body.role() != null ? body.role() : Role.USER);
         User savedUser = userRepository.save(newUser);
         mailgunSender.sendRegistrationEmail(savedUser);
         return new UserRespDTO(savedUser.getId());

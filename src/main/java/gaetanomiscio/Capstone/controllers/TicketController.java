@@ -2,6 +2,8 @@ package gaetanomiscio.Capstone.controllers;
 
 import gaetanomiscio.Capstone.entities.Ticket;
 import gaetanomiscio.Capstone.entities.User;
+import gaetanomiscio.Capstone.enums.Role;
+import gaetanomiscio.Capstone.exceptions.UnauthorizedException;
 import gaetanomiscio.Capstone.payload.CreateTicketDTO;
 import gaetanomiscio.Capstone.payload.UpdateTicketDTO;
 import gaetanomiscio.Capstone.services.TicketService;
@@ -34,19 +36,30 @@ public class TicketController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<Ticket> getAllTickets() {
-        return ticketService.findAllTickets();
+    public List<Ticket> getAllTickets(@AuthenticationPrincipal User currentUser) {
+        if (currentUser.getRole() == Role.ADMIN) {
+            return ticketService.findAllTickets();
+        } else {
+
+            throw new UnauthorizedException("Non sei autorizzato a vedere tutti i ticket.");
+        }
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public Ticket getTicketById(@PathVariable UUID id) {
-        return ticketService.findById(id);
+    public Ticket getTicketById(@PathVariable UUID id,
+                                @AuthenticationPrincipal User currentUser) {
+        Ticket ticket = ticketService.findById(id);
+        if (currentUser.getRole() != Role.ADMIN && !ticket.getUser().getId().equals(currentUser.getId())) {
+            throw new UnauthorizedException("Non sei autorizzato a vedere questo ticket.");
+        }
+
+        return ticket;
     }
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public List<Ticket> getAllTickets(@AuthenticationPrincipal User currentUser) {
+    public List<Ticket> getMyTickets(@AuthenticationPrincipal User currentUser) {
         return ticketService.findByUserId(currentUser.getId());
     }
 

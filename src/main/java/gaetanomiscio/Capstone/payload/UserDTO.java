@@ -1,5 +1,6 @@
 package gaetanomiscio.Capstone.payload;
 
+import gaetanomiscio.Capstone.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -13,5 +14,6 @@ public record UserDTO(
         String email,
         @NotEmpty(message = "La password è obbligatoria!")
         @Size(min = 8)
-        String password) {
+        String password,
+        Role role) {
 }
