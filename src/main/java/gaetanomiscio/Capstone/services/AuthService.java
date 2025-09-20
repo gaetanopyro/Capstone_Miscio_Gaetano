@@ -6,6 +6,7 @@ import gaetanomiscio.Capstone.exceptions.BadRequestException;
 import gaetanomiscio.Capstone.exceptions.NotFoundException;
 import gaetanomiscio.Capstone.exceptions.UnauthorizedException;
 import gaetanomiscio.Capstone.payload.LoginDTO;
+import gaetanomiscio.Capstone.payload.LoginRespDTO;
 import gaetanomiscio.Capstone.payload.UserDTO;
 import gaetanomiscio.Capstone.payload.UserRespDTO;
 import gaetanomiscio.Capstone.repositories.UserRepository;
@@ -27,10 +28,12 @@ public class AuthService {
     private MailgunSender mailgunSender;
 
 
-    public String authenticateUser(LoginDTO body) {
-        User user = userRepository.findByEmail(body.email()).orElseThrow(() -> new NotFoundException("Email non trovata."));
+    public LoginRespDTO authenticateUser(LoginDTO body) {
+        User user = userRepository.findByEmail(body.email())
+                .orElseThrow(() -> new NotFoundException("Email non trovata."));
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
-            return jwtTools.createToken(user);
+            String token = jwtTools.createToken(user);
+            return new LoginRespDTO(token, user.getRole().name());
         } else {
             throw new UnauthorizedException("Credenziali non valide!");
         }

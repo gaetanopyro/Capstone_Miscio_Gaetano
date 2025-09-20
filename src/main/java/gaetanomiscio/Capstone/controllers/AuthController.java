@@ -2,7 +2,7 @@ package gaetanomiscio.Capstone.controllers;
 
 import gaetanomiscio.Capstone.exceptions.ValidationException;
 import gaetanomiscio.Capstone.payload.LoginDTO;
-import gaetanomiscio.Capstone.payload.TokenRespDTO;
+import gaetanomiscio.Capstone.payload.LoginRespDTO;
 import gaetanomiscio.Capstone.payload.UserDTO;
 import gaetanomiscio.Capstone.payload.UserRespDTO;
 import gaetanomiscio.Capstone.services.AuthService;
@@ -22,8 +22,8 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public TokenRespDTO login(@RequestBody @Validated LoginDTO payload) {
-        return new TokenRespDTO(authService.authenticateUser(payload));
+    public LoginRespDTO login(@RequestBody @Validated LoginDTO payload) {
+        return authService.authenticateUser(payload);
     }
 
     @PostMapping("/register")
