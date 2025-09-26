@@ -15,3 +15,6 @@ utenti e clienti e soddisfarne le aspettative.
 *Java,
 *PostgreeSQL,
 *Spring
+
+questo è l'url per la repository del frontend:
+https://github.com/gaetanopyro/Capstone_Miscio_Gaetano_Frontend.git
